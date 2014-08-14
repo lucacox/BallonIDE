@@ -1,0 +1,21 @@
+{
+  "name": "BallonIDE",
+  "version": "0.0.0",
+  "description": "BallonIDE",
+  "main": "app.js",
+  "author": {
+    "name": "Luca",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "~4.7.2",
+    "serve-favicon":  "*",
+    "jade": "*",
+    "stylus": "*",
+    "mongoose": ">3.0.0",
+    "morgan": "~1.2.2",
+    "body-parser": "~1.5.2",
+    "method-override": "~2.1.2",
+    "esprima": "~1.2.2"
+  }
+}

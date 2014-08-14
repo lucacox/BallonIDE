@@ -1,0 +1,33 @@
+#editor-browser,
+#editor-body {
+  height: 700px;
+}
+#editor-browser {
+  background-color: #eee;
+  width: 20%;
+  float: left;
+  overflow: auto;
+  padding: 5px;
+}
+#editor {
+  background-color: #000;
+  padding: 0px;
+}
+.dir {
+  margin-left: 25px;
+}
+#editor-menu {
+  margin-left: 10px;
+  border: solid 1px #eee;
+}
+.menu-button {
+  float: left;
+  border: none !important;
+  margin-left: 5px;
+}
+.expander {
+  margin-right: 3px;
+}
+.highlight-variable {
+  background: #ff0;
+}

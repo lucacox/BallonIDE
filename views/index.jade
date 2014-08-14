@@ -1,0 +1,23 @@
+﻿extends layout
+
+block content
+  div(id="editor-menu" class="row")
+  div(id="editor-pane" class="row" style="margin-right: 5px;")
+    div(ng-controller="filesCtrl")
+        script(type="text/ng-template" id="tree_item_renderer.html")
+            div(ng-show="file.visible==true").dir
+                div(ng-click="fileClicked(file)")
+                    span(ng-show="file.dir").glyphicon.glyphicon-plus-sign.expander
+                    span
+                        {{file.file}}
+
+                div(ng-repeat="file in file.files" change-aspect ng-include="'tree_item_renderer.html'")
+
+        div#editor-browser
+            div(ng-repeat="file in dirs" change-aspect ng-include="'tree_item_renderer.html'")
+
+    div#editor(style="width: 78%; float: left; position: relative")
+        div#editor-header
+        div#editor-body
+
+
