@@ -38,3 +38,9 @@ Icon
 
 #node modules
 node_modules/
+
+#Visual Studio files/folders
+*.sln
+*.njsproj
+.ntvs*
+obj/
