@@ -1,453 +1,188 @@
-// Type definitions for Mongoose 3.8.5
-// Project: http://mongoosejs.com/
-// Definitions by: horiuchi <https://github.com/horiuchi/>
-// Definitions: https://github.com/borisyankov/DefinitelyTyped
+///<reference path='node.d.ts' />
 
-///<reference path="../node/node.d.ts" />
+export = M;
 
-declare module "mongoose" {
-  function connect(uri: string, options?: ConnectionOption, callback?: (err: any) => void): Mongoose;
-  function createConnection(): Connection;
-  function createConnection(uri: string, options?: ConnectionOption): Connection;
-  function createConnection(host: string, database_name: string, port?: number, options?: ConnectionOption): Connection;
-  function disconnect(callback?: (err?: any) => void): Mongoose;
+declare module M {
 
-  function model<T extends Document>(name: string, schema: Schema, collection?: string, skipInit?: boolean): Model<T>;
-  function modelNames(): string[];
-  function plugin(plugin: (schema: Schema, options?: Object) => void, options?: Object): Mongoose;
+    export interface Mongoose {
+        constructor();
+        set (key: string, value: string): Mongoose;
+        get (key: string): string;
+        createConnection(uri?: string, options?: any): Connection;
 
-  function get(key: string): any;
-  function set(key: string, value: any): void;
+        connect(any): Mongoose;
 
-  var mongo: any;
-  var mquery: any;
-  var version: string;
-  var connection: Connection;
+        disconnect(fn: (err?: any) => void ): Mongoose;
+        model(name: string, schema?: Schema, collection?: string, skipInit?: boolean): Model;
+        modelNames(): string[];
+        plugin(fn: (any) => any, opts?: any): Mongoose;
+        mongo: any;
+        version: string;
+        connection: Connection;
+    }
 
-  export class Mongoose {
-    connect(uri: string, options?: ConnectionOption, callback?: (err: any) => void): Mongoose;
-    createConnection(): Connection;
-    createConnection(uri: string, options?: Object): Connection;
-    createConnection(host: string, database_name: string, port?: number, options?: ConnectionOption): Connection;
-    disconnect(callback?: (err?: any) => void): Mongoose;
-    get(key: string): any;
-    model<T extends Document>(name: string, schema: Schema, collection?: string, skipInit?: boolean): Model<T>;
-    modelNames(): string[];
-    plugin(plugin: (schema: Schema, options?: Object) => void, options?: Object): Mongoose;
-    set(key: string, value: any): void;
+    export function set(key: string, value: string): Mongoose;
+    export function get(key: string): string;
+    export function createConnection(uri ? : string, options?: any): Connection;
 
-    mongo: any;
-    mquery: any;
-    version: string;
-    connection: Connection;
-  }
+    export function connect(any): Mongoose;
 
-  export interface Connection extends NodeJS.EventEmitter {
-    constructor(base: Mongoose): Connection;
+    export function disconnect(fn: (err?: any) => void ): Mongoose;
+    export function model(name: string, schema?: Schema, collection?: string, skipInit?: boolean): Model;
+    export function modelNames(): string[];
+    export function plugin(fn: (any) => any, opts?: any): Mongoose;
+    export var mongo: any;
+    export var version: string;
+    export var connection: Connection;
+    
+    export class Collection {
+        name: string;
+    }
 
-    close(callback?: (err: any) => void): Connection;
-    collection(name: string, options?: Object): Collection;
-    model<T extends Document>(name: string, schema: Schema, collection?: string): Model<T>;
-    modelNames(): string[];
-    open(host: string, database?: string, port?: number, options?: ConnectionOption, callback?: (err: any) => void): Connection;
-    openSet(uris: string, database?: string, options?: ConnectionSetOption, callback?: (err: any) => void): Connection;
+    export class Connection implements EventEmitter {
+        constructor(base: Mongoose);
 
-    db: any;
-    collections: {[index: string]: Collection};
-    readyState: number;
-  }
-  export interface ConnectionOption {
-    db?: any;
-    server?: any;
-    replset?: any;
-    user?: string;
-    pass?: string;
-    auth?: any;
-  }
-  export interface ConnectionSetOption extends ConnectionOption {
-    mongos?: boolean;
-  }
+        addListener(event: string, listener: Function);
+        on(event: string, listener: Function);
+        once(event: string, listener: Function): void;
+        removeListener(event: string, listener: Function): void;
+        removeAllListeners(event?: string): void;
+        setMaxListeners(n: number): void;
+        listeners(event: string): { Function; }[];
+        emit(event: string, ...args: any[]): void;
 
-  export interface Collection {
-  }
+        open(connection_string: string,
+             database?: string,
+             port?: number,
+             options?: any,
+             callback?: (any) => any): Connection;
 
+        openSet(uris: string,
+                database?: string,
+                options?: any,
+                callback?: (any) => any): Connection;
 
-  export class SchemaType { }
-  export class VirtualType {
-    get(fn: Function): VirtualType;
-    set(fn: Function): VirtualType;
-  }
-  export module Types {
-    export class ObjectId {}
-  }
+        close(callback?: (any) => any): Connection;
+        collection(name: string, options?: any): Collection;
+        model(name: string, schema?: Schema, collection?: string): Model;
+        modelNames(): string[];
+        setProfiling(level: number, ms: number, callback: (any) => any): any;
+        db: any;
+        collections: any;
+        readyState: number;
+    }
 
-  export class Schema {
-    static Types: {
-      String: String;
-      ObjectId: Types.ObjectId;
-      OId: Types.ObjectId;
-      Mixed: any;
-    };
-    constructor(schema?: Object, options?: Object);
+    export class Schema {
+        constructor(definition: any, options?: any);
+        static Types: {
+            ObjectId: any;
+            Mixed: any;
+        };
 
-    add(obj: Object, prefix?: string): void;
-    eachPath(fn: (path: string, type: any) => void): Schema;
-    get(key: string): any;
-    index(fields: Object, options?: Object): Schema;
-    indexes(): void;
-    method(name: string, fn: Function): Schema;
-    method(method: Object): Schema;
-    path(path: string): any;
-    path(path: string, constructor: any): Schema;
-    pathType(path: string): string;
-    plugin(plugin: (schema: Schema, options?: Object) => void, options?: Object): Schema;
-    post(method: string, fn: Function): Schema;
-    pre(method: string, callback: Function): Schema;
-    requiredPaths(): string[];
-    set(key: string, value: any): void;
-    static(name: string, fn: Function): Schema;
-    virtual(name: string, options?: Object): VirtualType;
-    virtualpath(name: string): VirtualType;
-  }
-  export interface SchemaOption {
-    autoIndex?: boolean;
-    bufferCommands?: boolean;
-    capped?: boolean;
-    collection?: string;
-    id?: boolean;
-    _id?: boolean;
-    minimize?: boolean;
-    read?: string;
-    safe?: boolean;
-    shardKey?: boolean;
-    strict?: boolean;
-    toJSON?: Object;
-    toObject?: Object;
-    versionKey?: boolean;
-  }
+        methods: any;
+        statics: any;
+        path(path: string): any;
+        virtual(path: string): any;
+        pre(method: string, callback: (next: (any?) => any) => any): void;
+    }
 
-  export interface Model<T extends Document> {
-    new(doc: Object): T;
+    export class SchemaType { }
 
-    aggregate(...aggregations: Object[]): Aggregate<T[]>;
-    aggregate(aggregation: Object, callback: (err: any, res: T[]) => void): Promise<T[]>;
-    aggregate(aggregation1: Object, aggregation2: Object, callback: (err: any, res: T[]) => void): Promise<T[]>;
-    aggregate(aggregation1: Object, aggregation2: Object, aggregation3: Object, callback: (err: any, res: T[]) => void): Promise<T[]>;
-    count(conditions: Object, callback?: (err: any, count: number) => void): Query<number>;
+    export class VirtualType { }
 
-    create(doc: Object, fn?: (err: any, res: T) => void): Promise<T[]>;
-    create(doc1: Object, doc2: Object, fn?: (err: any, res1: T, res2: T) => void): Promise<T[]>;
-    create(doc1: Object, doc2: Object, doc3: Object, fn?: (err: any, res1: T, res2: T, res3: T) => void): Promise<T[]>;
-    discriminator<U extends Document>(name: string, schema: Schema): Model<U>;
-    distinct(field: string, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    distinct(field: string, conditions: Object, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    ensureIndexes(callback: (err: any) => void): Promise<T>;
+    export class Query<T extends Document> {
+        exec(): Promise;
+        exec(operation: string): Promise;
+        exec(callback: (err: any, res: T[]) => any): Promise;
+        exec(operation: string, callback: (err: any, res: T[]) => void ): Promise;
 
-    find(cond: Object, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    find(cond: Object, fields: Object, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    find(cond: Object, fields: Object, options: Object, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    findById(id: string, callback?: (err: any, res: T) => void): Query<T>;
-    findById(id: string, fields: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findById(id: string, fields: Object, options: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findByIdAndRemove(id: string, callback?: (err: any, res: T) => void): Query<T>;
-    findByIdAndRemove(id: string, options: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findByIdAndUpdate(id: string, update: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findByIdAndUpdate(id: string, update: Object, options: FindAndUpdateOption, callback?: (err: any, res: T) => void): Query<T>;
-    findOne(cond: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOne(cond: Object, fields: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOne(cond: Object, fields: Object, options: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndRemove(cond: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndRemove(cond: Object, options: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndUpdate(cond: Object, update: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndUpdate(cond: Object, update: Object, options: FindAndUpdateOption, callback?: (err: any, res: T) => void): Query<T>;
+        skip(x: number): Query;
+        limit(x: number): Query;
+    }
 
-    geoNear(point: { type: string; coordinates: number[] }, options: Object, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    geoNear(point: number[], options: Object, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    geoSearch(cond: Object, options: GeoSearchOption, callback?: (err: any, res: T[]) => void): Query<T[]>;
-    increment(): T;
-    mapReduce<K, V>(options: MapReduceOption<T, K, V>, callback?: (err: any, res: MapReduceResult<K, V>[]) => void): Promise<MapReduceResult<K, V>[]>;
-    mapReduce<K, V>(options: MapReduceOption2<T, K, V>, callback?: (err: any, res: MapReduceResult<K, V>[]) => void): Promise<MapReduceResult<K, V>[]>;
-    model<U extends Document>(name: string): Model<U>;
+    export class Promise { }
 
-    populate<U>(doc: U, options: Object, callback?: (err: any, res: U) => void): Promise<U>;
-    populate<U>(doc: U[], options: Object, callback?: (err: any, res: U[]) => void): Promise<U[]>;
-    update(cond: Object, update: Object, callback?: (err: any, affectedRows: number, raw: any) => void): Query<T>;
-    update(cond: Object, update: Object, options: Object, callback?: (err: any, affectedRows: number, raw: any) => void): Query<T>;
-    remove(cond: Object, callback?: (err: any) => void): Query<{}>;
-    save(callback?: (err: any, result: T, numberAffected: number) => void): Query<T>;
-    where(path: string, val?: Object): Query<T[]>;
+    export interface Model<T extends Document> {
+        new (any): Document;
 
-    $where(argument: string): Query<T>;
-    $where(argument: Function): Query<T>;
+        find(conditions: any): Query<T>;
+        find(conditions: any, fields: any): Query<T>;
+        find(conditions: any, fields: any, options: any): Query<T>;
+        find(conditions: any, fields: any, options: any, callback: (err: any, res: any) => void ): Query<T>;
+        find(conditions: any, callback: (err: any, res: T[]) => void ): Query<T>;
+        find(conditions: any, fields: any, callback: (err: any, res: T[]) => void ): Query<T>;
 
-    base: Mongoose;
-    collection: Collection;
-    db: any;
-    discriminators: any;
-    modelName: string;
-    schema: Schema;
-  }
-  export interface FindAndUpdateOption {
-    new?: boolean;
-    upsert?: boolean;
-    sort?: Object;
-    select?: Object;
-  }
-  export interface GeoSearchOption {
-    near: number[];
-    maxDistance: number;
-    limit?: number;
-    lean?: boolean;
-  }
-  export interface MapReduceOption<T extends Document, Key, Val> {
-    map: () => void;
-    reduce: (key: Key, vals: T[]) => Val;
-    query?: Object;
-    limit?: number;
-    keeptemp?: boolean;
-    finalize?: (key: Key, val: Val) => Val;
-    scope?: Object;
-    jsMode?: boolean;
-    verbose?: boolean;
-    out?: {
-      inline?: number;
-      replace?: string;
-      reduce?: string;
-      merge?: string;
-    };
-  }
-  export interface MapReduceOption2<T extends Document, Key, Val> {
-    map: string;
-    reduce: (key: Key, vals: T[]) => Val;
-    query?: Object;
-    limit?: number;
-    keeptemp?: boolean;
-    finalize?: (key: Key, val: Val) => Val;
-    scope?: Object;
-    jsMode?: boolean;
-    verbose?: boolean;
-    out?: {
-      inline?: number;
-      replace?: string;
-      reduce?: string;
-      merge?: string;
-    };
-  }
-  export interface MapReduceResult<Key, Val> {
-    _id: Key;
-    value: Val;
-  }
+        findOne(conditions: any): Query<T>;
+        findOne(conditions: any, fields: any): Query<T>;
+        findOne(conditions: any, fields: any, options: any): Query<T>;
+        findOne(conditions: any, fields: any, options: any, callback: (err: any, res: T) => void ): Query<T>;
+        findOne(conditions: any, callback: (err: any, res: T) => void ): Query<T>;
+        findOne(conditions: any, fields: any, callback: (err: any, res: T) => void ): Query<T>;
 
-  export class Query<T> {
-    exec(callback?: (err: any, res: T) => void): Promise<T>;
-    exec(operation: string, callback?: (err: any, res: T) => void): Promise<T>;
-    exec(operation: Function, callback?: (err: any, res: T) => void): Promise<T>;
+        findById(id: string): Query<T>;
+        findById(id: string, fields: any): Query<T>;
+        findById(id: string, fields: any, options: any): Query<T>;
+        findById(id: string, fields: any, options: any, callback: (err: any, res: T) => void ): Query<T>;
+        findById(id: string, callback: (err: any, res: T) => void ): Query<T>;
+        findById(id: string, fields: any, callback: (err: any, res: T) => void ): Query<T>;
 
-    all(val: number): Query<T>;
-    all(path: string, val: number): Query<T>;
-    and(array: Object[]): Query<T>;
-    box(val: Object): Query<T>;
-    box(a: number[], b: number[]): Query<T>;
-    batchSize(val: number): Query<T>;
-    cast<U extends Document>(model: Model<U>, obj: Object): U;
-    //center(): Query<T>;
-    //centerSphere(path: string, val: Object): Query<T>;
-    circle(area: Object): Query<T>;
-    circle(path: string, area: Object): Query<T>;
-    comment(val: any): Query<T>;
-    count(callback?: (err: any, count: number) => void): Query<T>;
-    count(criteria: Object, callback?: (err: any, count: number) => void): Query<T>;
-    distinct(callback?: (err: any, res: T) => void): Query<T>;
-    distinct(field: string, callback?: (err: any, res: T) => void): Query<T>;
-    distinct(criteria: Object, field: string, callback?: (err: any, res: T) => void): Query<T>;
-    distinct(criteria: Query<T>, field: string, callback?: (err: any, res: T) => void): Query<T>;
-    elemMatch(criteria: Object): Query<T>;
-    elemMatch(criteria: (elem: Query<T>) => void): Query<T>;
-    elemMatch(path: string, criteria: Object): Query<T>;
-    elemMatch(path: string, criteria: (elem: Query<T>) => void): Query<T>;
-    equals(val: Object): Query<T>;
-    exists(val?: boolean): Query<T>;
-    exists(path: string, val?: boolean): Query<T>;
-    find(callback?: (err: any, res: T) => void): Query<T>;
-    find(criteria: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOne(callback?: (err: any, res: T) => void): Query<T>;
-    findOne(criteria: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndRemove(callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndRemove(cond: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndRemove(cond: Object, options: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndUpdate(callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndUpdate(update: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndUpdate(cond: Object, update: Object, callback?: (err: any, res: T) => void): Query<T>;
-    findOneAndUpdate(cond: Object, update: Object, options: FindAndUpdateOption, callback?: (err: any, res: T) => void): Query<T>;
-    geometry(object: Object): Query<T>;
-    gt(val: number): Query<T>;
-    gt(path: string, val: number): Query<T>;
-    gte(val: number): Query<T>;
-    gte(path: string, val: number): Query<T>;
-    hint(val: Object): Query<T>;
-    in(val: any[]): Query<T>;
-    in(path: string, val: any[]): Query<T>;
-    intersects(arg?: Object): Query<T>;
-    lean(bool?: boolean): Query<T>;
-    limit(val: number): Query<T>;
-    lt(val: number): Query<T>;
-    lt(path: string, val: number): Query<T>;
-    lte(val: number): Query<T>;
-    lte(path: string, val: number): Query<T>;
-    maxDistance(val: number): Query<T>;
-    maxDistance(path: string, val: number): Query<T>;
-    maxScan(val: number): Query<T>;
-    merge(source: Query<T>): Query<T>;
-    merge(source: Object): Query<T>;
-    mod(val: number[]): Query<T>;
-    mod(path: string, val: number[]): Query<T>;
-    ne(val: any): Query<T>;
-    ne(path: string, val: any): Query<T>;
-    near(val: Object): Query<T>;
-    near(path: string, val: Object): Query<T>;
-    nearSphere(val: Object): Query<T>;
-    nearSphere(path: string, val: Object): Query<T>;
-    nin(val: any[]): Query<T>;
-    nin(path: string, val: any[]): Query<T>;
-    nor(array: Object[]): Query<T>;
-    or(array: Object[]): Query<T>;
-    polygon(...coordinatePairs: number[][]): Query<T>;
-    polygon(path: string, ...coordinatePairs: number[][]): Query<T>;
-    populate(path: string, select?: string, match?: Object, options?: Object): Query<T>;
-    populate(path: string, select: string, model: string, match?: Object, options?: Object): Query<T>;
-    populate(opt: PopulateOption): Query<T>;
-    read(pref: string, tags?: Object[]): Query<T>;
-    regex(val: RegExp): Query<T>;
-    regex(path: string, val: RegExp): Query<T>;
-    remove(callback?: (err: any, res: T) => void): Query<T>;
-    remove(criteria: Object, callback?: (err: any, res: T) => void): Query<T>;
-    select(arg: string): Query<T>;
-    select(arg: Object): Query<T>;
-    setOptions(options: Object): Query<T>;
-    size(val: number): Query<T>;
-    size(path: string, val: number): Query<T>;
-    skip(val: number): Query<T>;
-    slaveOk(v?: boolean): Query<T>;
-    slice(val: number): Query<T>;
-    slice(val: number[]): Query<T>;
-    slice(path: string, val: number): Query<T>;
-    slice(path: string, val: number[]): Query<T>;
-    snapshot(v?: boolean): Query<T>;
-    sort(arg: Object): Query<T>;
-    sort(arg: string): Query<T>;
-    stream(options?: { transform?: Function; }): QueryStream;
-    tailable(v?: boolean): Query<T>;
-    toConstructor(): Query<T>;
-    update(callback?: (err: any, affectedRows: number, doc: T) => void): Query<T>;
-    update(doc: Object, callback?: (err: any, affectedRows: number, doc: T) => void): Query<T>;
-    update(criteria: Object, doc: Object, callback?: (err: any, affectedRows: number, doc: T) => void): Query<T>;
-    update(criteria: Object, doc: Object, options: Object, callback?: (err: any, affectedRows: number, doc: T) => void): Query<T>;
-    where(path?: string, val?: any): Query<T>;
-    where(path?: Object, val?: any): Query<T>;
-    within(val?: Object): Query<T>;
-    within(coordinate: number[], ...coordinatePairs: number[][]): Query<T>;
+        findByIdAndUpdate(id: string): Query<T>;
+        findByIdAndUpdate(id: string, update: any): Query<T>;
+        findByIdAndUpdate(id: string, update: any, options: any): Query<T>;
+        findByIdAndUpdate(id: string, update: any, options: any, callback: (err: any, res: T[]) => void ): Query<T>;
+        findByIdAndUpdate(id: string, callback: (err: any, res: T[]) => void ): Query<T>;
+        findByIdAndUpdate(id: string, update: any, callback: (err: any, res: T[]) => void ): Query<T>;
 
-    $where(argument: string): Query<T>;
-    $where(argument: Function): Query<T>;
+        update(conditions: any,
+               update: any,
+               options?: any,
+               callback?: (err: any, affectedRows: number, raw: any) => void ): Query<T>;
+        update(conditions: any,
+               update: any,
+               callback?: (err: any, affectedRows: number, raw: any) => void ): Query<T>;
 
-    static use$geoWithin: boolean;
-  }
+        create(doc: any, fn: (err: any, res: T) => void ): void;
 
-  export interface PopulateOption {
-    path: string;
-    select?: string;
-    model?: string;
-    match?: Object;
-    options?: Object;
-  }
+        collection: Collection;
 
-  export interface QueryStream extends NodeJS.EventEmitter {
-    destory(err?: any): void;
-    pause(): void;
-    resume(): void;
-    pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
-    paused: number;
-    readable: boolean;
-  }
+        remove(conditions: any, callback?: (err) => void): Query<T>;
+    }
+    /*
+    export var Model: {
+        (any);
+        constructor(doc?: any);
+        new (any);
 
-  export interface Document {
-    id?: string;
-    _id: string;
+        find(conditions: any): Query;
+        find(conditions: any, fields: any): Query;
+        find(conditions: any, fields: any, options: any): Query;
+        find(conditions: any, fields: any, options: any, callback: (err: any, res: any) => void ): Query;
+        find(conditions: any, callback: (err: any, res: any) => void ): Query;
+        find(conditions: any, fields: any, callback: (err: any, res: any) => void ): Query;
 
-    equals(doc: Document): boolean;
-    get(path: string, type?: new(...args: any[]) => any): any;
-    inspect(options?: Object): string;
-    invalidate(path: string, errorMsg: string, value: any): void;
-    invalidate(path: string, error: Error, value: any): void;
-    isDirectModified(path: string): boolean;
-    isInit(path: string): boolean;
-    isModified(path?: string): boolean;
-    isSelected(path: string): boolean;
-    markModified(path: string): void;
-    modifiedPaths(): string[];
-    populate<T>(callback?: (err: any, res: T) => void): Document;
-    populate<T>(path?: string, callback?: (err: any, res: T) => void): Document;
-    populate<T>(opt: PopulateOption, callback?: (err: any, res: T) => void): Document;
-    populated(path: string): any;
-    remove<T>(callback?: (err: any) => void): Query<T>;
-    save<T>(callback?: (err: any, res: T) => void): void;
-    set(path: string, val: any, type?: new(...args: any[]) => any, options?: Object): void;
-    set(path: string, val: any, options?: Object): void;
-    set(value: Object): void;
-    toJSON(options?: Object): Object;
-    toObject(options?: Object): Object;
-    toString(): string;
-    update<T>(doc: Object, options: Object, callback: (err: any, affectedRows: number, raw: any) => void): Query<T>;
-    validate(cb: (err: any) => void): void;
+        findById(id: string): Query;
+        findById(id: string, fields: any): Query;
+        findById(id: string, fields: any, options: any): Query;
+        findById(id: string, fields: any, options: any, callback: (err: any, res: any) => void ): Query;
+        findById(id: string, callback: (err: any, res: any) => void ): Query;
+        findById(id: string, fields: any, callback: (err: any, res: any) => void ): Query;
 
-    isNew: boolean;
-    errors: Object;
-    schema: Object;
-  }
+        collection: Collection;
+    }*/
 
+    export interface Document {
+        _id: string;
+        update<T extends Document>(doc: any, options: any, callback: (err: any, affectedRows: number, raw: any) => void ): Query<T>;
+        save<T extends Document>(fn?: (err: any, res: T) => void ): void;
+        remove<T extends Document>(callback?: (err) => void ): Query<T>;
+    }
 
-  export class Aggregate<T> {
-    constructor(...options: Object[]);
+    export class MongooseError { }
 
-    append(...options: Object[]): Aggregate<T>;
-    group(arg: Object): Aggregate<T>;
-    limit(num: number): Aggregate<T>;
-    match(arg: Object): Aggregate<T>;
-    near(parameters: Object): Aggregate<T>;
-    project(arg: string): Aggregate<T>;
-    project(arg: Object): Aggregate<T>;
-    select(filter: string): Aggregate<T>;
-    skip(num: number): Aggregate<T>;
-    sort(arg: string): Aggregate<T>;
-    sort(arg: Object): Aggregate<T>;
-    unwind(fiels: string, ...rest: string[]): Aggregate<T>;
+    export class Types { }
 
-    exec(callback?: (err: any, result: T) => void): Promise<T>;
-    read(pref: string, ...tags: Object[]): Aggregate<T>;
-  }
-
-  export class Promise<T> {
-    constructor(fn?: (err: any, result: T) => void);
-
-    then<U>(onFulFill: (result: T) => void, onReject?: (err: any) => void): Promise<U>;
-    end(): void;
-
-    fulfill(result: T): Promise<T>;
-    reject(err: any): Promise<T>;
-    resolve(err: any, result: T): Promise<T>;
-
-    onFulfill(listener: (result: T) => void): Promise<T>;
-    onReject(listener: (err: any) => void): Promise<T>;
-    onResolve(listener: (err: any, result: T) => void): Promise<T>;
-    on(event: string, listener: Function): Promise<T>;
-
-    // Deprecated methods.
-    addBack(listener: (err: any, result: T) => void): Promise<T>;
-    addCallback(listener: (result: T) => void): Promise<T>;
-    addErrback(listener: (err: any) => void): Promise<T>;
-    complete(result: T): Promise<T>;
-    error(err: any): Promise<T>;
-  }
-
+    export class SchemaTypes { }
 }
 
+
+    
