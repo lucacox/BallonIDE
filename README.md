@@ -1,11 +1,11 @@
 # BallonIDE
 
-The idea come from CodeBubbles (http://cs.brown.edu/~spr/codebubbles/).
+The idea comes from CodeBubbles (http://cs.brown.edu/~spr/codebubbles/).
 
-The project is base on node.js (http://nodejs.org), AngularJS (https://angularjs.org/) and TypeScript (http://www.typescriptlang.org/)
+The project is based on node.js (http://nodejs.org), AngularJS (https://angularjs.org/) and TypeScript (http://www.typescriptlang.org/)
 
 ## The IDE should offer
-* code ballons
+* code ballons!
 * project structure/navigation
 * syntax highlighting
 * code inspection
@@ -20,9 +20,12 @@ The project is base on node.js (http://nodejs.org), AngularJS (https://angularjs
 * code inspection for JavaScript based on Esprima
 
 ## Third Party libraries
-- jQuery
-- Bootstrap
-- Express (http://expressjs.com/)
-- Esprima (http://esprima.org/)
-- CodeMirror (http://codemirror.net/)
+* jQuery
+* Bootstrap
+* Express (http://expressjs.com/)
+* Esprima (http://esprima.org/)
+* CodeMirror (http://codemirror.net/)
 
+## Contribute
+
+If you want to contribute: create a new branch for the feature you wanto to implement and when you are ready issue a pull request
