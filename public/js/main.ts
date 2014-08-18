@@ -14,12 +14,8 @@ var _help = null;
 
 $(function () {
     var eb = $('#editor');
-    _the_editor = new Editor(document.getElementById('editor-body'));
-
-    _the_editor.setSize(eb.width(), eb.height());
-    _the_editor.setNumberVisible(true);
-
-    _code_engine = new engine.CodeEngine();
+    _the_editor = new Editor('editor-body');
+    _code_engine = new engine.CodeModel();
 
     _menu = new menu.Menu($('#editor-menu'));
     _file = _menu.addEntry('File');
@@ -41,28 +37,4 @@ $(function () {
     _edit = _menu.addEntry('Edit');
     _view = _menu.addEntry('View');
     _help = _menu.addEntry('Help');
-
-    $(document).on('mouseenter', '.CodeMirror-code span', function (e) {
-        var el = $(e.target);
-        $('.CodeMirror-code div pre span').removeClass('highlight-variable');
-        var block = _code_engine.find(el.html());
-        if (block.length > 0) {
-            block = block[0];
-            console.log(block);
-            console.log("line:", block.line());
-            var line = $('.CodeMirror-code div pre')[block.line() - 1];
-            $(line).children().children().filter(function (index) {
-                return $(this).html() == block.name();
-            }).addClass('highlight-variable');
-            for (var i in block.references()) {
-                var ref = block.references()[i];
-                var line = $('.CodeMirror-code div pre')[ref.line - 1];
-                $(line).children().children().filter(function (index) {
-                    return $(this).html() == block.name();
-                }).addClass('highlight-variable');
-            }
-            
-           
-        }
-    });
 });

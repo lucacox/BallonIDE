@@ -87,9 +87,11 @@ function filesCtrl($scope, $http) {
 
         console.log("MODE:", mode);
 
-        _the_editor.setMode(mode);
+        
         _the_editor.setText(data.body);
-        _code_engine.enqueue(path);
+        _the_editor.setMode(mode);
+
+        _code_engine.inspect(_the_editor._session);
       });
     }
   }
